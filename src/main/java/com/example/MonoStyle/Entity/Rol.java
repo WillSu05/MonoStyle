@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name ="Rol")
+@Table(name ="roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
