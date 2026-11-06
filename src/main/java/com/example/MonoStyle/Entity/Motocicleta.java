@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "motocicletas")
+@Table(name = "motocicleta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,20 +14,17 @@ public class Motocicleta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMotocicleta;
 
-    @Column(nullable = false, length = 10, unique = true)
+    @Column(nullable = false)
+    private Integer modelo;
+
+    @Column(nullable = false, name = "anio") // Cambiado a 'anio' para evitar errores de codificación en BD
+    private Integer año;
+
+    @Column(nullable = false, length = 20)
     private String placa;
 
     @Column(nullable = false, length = 30)
     private String color;
-
-    @Column(nullable = false, length = 50, unique = true)
-    private String chasis;
-
-    @Column(nullable = false)
-    private Integer modelo;
-
-    @Column(nullable = false)
-    private Integer cilindraje;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_marca", nullable = false)
