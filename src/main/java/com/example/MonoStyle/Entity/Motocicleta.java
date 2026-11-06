@@ -17,7 +17,7 @@ public class Motocicleta {
     @Column(nullable = false)
     private Integer modelo;
 
-    @Column(nullable = false, name = "anio") // Cambiado a 'anio' para evitar errores de codificación en BD
+    @Column(nullable = false, name = "anio")
     private Integer año;
 
     @Column(nullable = false, length = 20)
