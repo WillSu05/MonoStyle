@@ -15,4 +15,8 @@ public class OrdenCompra {
 
     @Column(nullable = false, length = 255)
     private String descripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_proveedor", nullable = false)
+    private Proveedor proveedor;
 }

@@ -23,6 +23,6 @@ public class Proveedor {
     private String tiempoPromedioEntrega;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idReferencia", nullable = false)
+    @JoinColumn(name = "id_referencia")
     private Referencia referencia;
 }
