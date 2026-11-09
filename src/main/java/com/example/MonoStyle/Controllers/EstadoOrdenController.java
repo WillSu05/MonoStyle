@@ -15,11 +15,30 @@ import java.util.List;
 class EstadoOrdenController {
     @Autowired
     private EstadoOrdenService service;
+
     @GetMapping
-    public ResponseEntity<List<EstadoOrdenDTO>> listar() { return ResponseEntity.ok(service.listarEstados()); }
-    @GetMapping("/{id}") public ResponseEntity<EstadoOrdenDTO> obtener(@PathVariable Long id) { return ResponseEntity.ok(service.obtenerEstadoPorId(id)); }
+    public ResponseEntity<List<EstadoOrdenDTO>> listar() {
+        return ResponseEntity.ok(service.listarEstados());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstadoOrdenDTO> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerEstadoPorId(id));
+    }
+
     @PostMapping
-    public ResponseEntity<EstadoOrdenDTO> crear(@Valid @RequestBody EstadoOrdenDTO dto) { return new ResponseEntity<>(service.crearEstado(dto), HttpStatus.CREATED); }
-    @PutMapping("/{id}") public ResponseEntity<EstadoOrdenDTO> actualizar(@PathVariable Long id, @Valid @RequestBody EstadoOrdenDTO dto) { return ResponseEntity.ok(service.actualizarEstado(id, dto)); }
-    @DeleteMapping("/{id}") public ResponseEntity<Void> eliminar(@PathVariable Long id) { service.eliminarEstado(id); return ResponseEntity.noContent().build(); }
+    public ResponseEntity<EstadoOrdenDTO> crear(@Valid @RequestBody EstadoOrdenDTO dto) {
+        return new ResponseEntity<>(service.crearEstado(dto), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EstadoOrdenDTO> actualizar(@PathVariable Long id, @Valid @RequestBody EstadoOrdenDTO dto) {
+        return ResponseEntity.ok(service.actualizarEstado(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminarEstado(id);
+        return ResponseEntity.noContent().build();
+    }
 }

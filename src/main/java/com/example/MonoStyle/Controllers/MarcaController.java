@@ -15,11 +15,30 @@ import java.util.List;
 class MarcaController {
     @Autowired
     private MarcaService service;
+
     @GetMapping
-    public ResponseEntity<List<MarcaDTO>> listar() { return ResponseEntity.ok(service.listarMarcas()); }
-    @GetMapping("/{id}") public ResponseEntity<MarcaDTO> obtener(@PathVariable Long id) { return ResponseEntity.ok(service.obtenerMarcaPorId(id)); }
+    public ResponseEntity<List<MarcaDTO>> listar() {
+        return ResponseEntity.ok(service.listarMarcas());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MarcaDTO> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerMarcaPorId(id));
+    }
+
     @PostMapping
-    public ResponseEntity<MarcaDTO> crear(@Valid @RequestBody MarcaDTO dto) { return new ResponseEntity<>(service.crearMarca(dto), HttpStatus.CREATED); }
-    @PutMapping("/{id}") public ResponseEntity<MarcaDTO> actualizar(@PathVariable Long id, @Valid @RequestBody MarcaDTO dto) { return ResponseEntity.ok(service.actualizarMarca(id, dto)); }
-    @DeleteMapping("/{id}") public ResponseEntity<Void> eliminar(@PathVariable Long id) { service.eliminarMarca(id); return ResponseEntity.noContent().build(); }
+    public ResponseEntity<MarcaDTO> crear(@Valid @RequestBody MarcaDTO dto) {
+        return new ResponseEntity<>(service.crearMarca(dto), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MarcaDTO> actualizar(@PathVariable Long id, @Valid @RequestBody MarcaDTO dto) {
+        return ResponseEntity.ok(service.actualizarMarca(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminarMarca(id);
+        return ResponseEntity.noContent().build();
+    }
 }

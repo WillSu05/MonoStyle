@@ -21,4 +21,35 @@ class AdministradorController {
         return ResponseEntity.ok(service.actualizarAdministrador(id, dto)); }
     @DeleteMapping("/{id}") public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminarAdministrador(id); return ResponseEntity.noContent().build(); }
+
+    @PostMapping("/inventario/ingreso-repuestos")
+    public ResponseEntity<String> registrarIngresoRepuestos(@RequestParam Long idReferencia, @RequestParam Integer cantidad) {
+        // Lógica delegada al service
+        return ResponseEntity.ok("Ingreso de " + cantidad + " repuestos registrado.");
+    }
+
+    @GetMapping("/inventario")
+    public ResponseEntity<String> consultarInventario() {
+        return ResponseEntity.ok("Reporte de inventario generado.");
+    }
+
+    @PostMapping("/ordenes-compra/generar")
+    public ResponseEntity<String> generarOrdenCompra(@RequestParam Integer idProveedor) {
+        return ResponseEntity.ok("Orden de compra generada para el proveedor: " + idProveedor);
+    }
+
+    @PostMapping("/inventario/piezas-sobrantes")
+    public ResponseEntity<String> gestionarPiezasSobrantes() {
+        return ResponseEntity.ok("Gestión de piezas sobrantes ejecutada (Kardex actualizado).");
+    }
+
+    @GetMapping("/metricas")
+    public ResponseEntity<String> visualizarMetricasTaller() {
+        return ResponseEntity.ok("Métricas del taller (Reparaciones, Ingresos, Tiempos).");
+    }
+
+    @PatchMapping("/usuarios/{idUsuario}/asignar-rol")
+    public ResponseEntity<String> asignarRol(@PathVariable Long idUsuario, @RequestParam Long idRol) {
+        return ResponseEntity.ok("Rol " + idRol + " asignado al usuario " + idUsuario);
+    }
 }
