@@ -36,7 +36,6 @@ public class AdministradorServiceImpl implements AdministradorService {
 
         Administrador admin = Administrador.builder()
                 .nombre(dto.getNombre())
-                .nivelAcceso(dto.getNivelAcceso())
                 .credenciales(passwordEncoder.encode(dto.getCredenciales()))
                 .rol(rol).build();
 
@@ -49,7 +48,6 @@ public class AdministradorServiceImpl implements AdministradorService {
         Rol rol = rolRepository.findById(dto.getIdRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         admin.setNombre(dto.getNombre());
-        admin.setNivelAcceso(dto.getNivelAcceso());
         admin.setRol(rol);
 
         // Si el usuario envía una nueva contraseña, se encripta y se actualiza
@@ -67,6 +65,6 @@ public class AdministradorServiceImpl implements AdministradorService {
 
     private AdministradorDTO convertirADTO(Administrador a) {
         return AdministradorDTO.builder().idAdministrador(a.getIdAdministrador()).nombre(a.getNombre())
-                .nivelAcceso(a.getNivelAcceso()).idRol(a.getRol().getId()).build();
+                .idRol(a.getRol().getId()).build();
     }
 }

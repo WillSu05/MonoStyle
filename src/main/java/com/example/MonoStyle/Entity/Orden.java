@@ -1,4 +1,5 @@
 package com.example.MonoStyle.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 @Table(name = "orden")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Orden {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrden;

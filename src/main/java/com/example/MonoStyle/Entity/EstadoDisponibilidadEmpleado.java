@@ -1,5 +1,6 @@
 package com.example.MonoStyle.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EstadoDisponibilidadEmpleado {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDisponibilidadEmpleado;

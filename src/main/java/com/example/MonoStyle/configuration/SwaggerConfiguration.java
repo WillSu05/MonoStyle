@@ -11,9 +11,9 @@ public class SwaggerConfiguration {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API Ruta Segura")
+                        .title("API MonoStyle")
                         .version("1.0")
-                        .description("Docunentacion de la API para Ruta Segura")
+                        .description("Docunentacion de la API para MonoStyle")
                         .contact(new Contact()
                                 .name("Soporte API")
                                 .email("d-----")));

@@ -15,6 +15,7 @@ public class Cliente {
     private Long idCliente;
 
     @Column(nullable = false, length = 100)
+
     private String nombre;
 
     @Column(length = 20)
