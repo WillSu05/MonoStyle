@@ -1,13 +1,11 @@
 package com.example.MonoStyle.Entity;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "orden")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Orden {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +25,8 @@ public class Orden {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_estado_orden", nullable = false)
     private EstadoOrden estadoOrden;
+
+    // Relación de vuelta opcional para facilitar consultas bidireccionales
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleOrden> detalles;
 }

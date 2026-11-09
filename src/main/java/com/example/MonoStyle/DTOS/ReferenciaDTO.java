@@ -13,6 +13,9 @@ public class ReferenciaDTO {
     @NotBlank(message = "La descripción de la referencia es obligatoria")
     private String descripcion;
 
+    @NotNull(message = "El stock es obligatorio")
+    private Double stock;
+
     @NotNull(message = "El ID de la categoría es obligatorio")
     private Long idCategoria;
 }
