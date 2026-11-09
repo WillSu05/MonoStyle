@@ -1,11 +1,12 @@
 package com.example.MonoStyle.Service.IMPL;
 import com.example.MonoStyle.DTOS.ClienteDTO;
-import com.example.MonoStyle.Entity.Cliente;
-import com.example.MonoStyle.Entity.Rol;
-import com.example.MonoStyle.Repository.ClienteRepository;
-import com.example.MonoStyle.Repository.RolRepository;
+import com.example.MonoStyle.DTOS.OrdenDTO;
+import com.example.MonoStyle.DTOS.SolicitudServicioDTO;
+import com.example.MonoStyle.Entity.*;
+import com.example.MonoStyle.Repository.*;
 import com.example.MonoStyle.Service.ClienteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,10 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final RolRepository rolRepository;
+    @Autowired
+    private OrdenRepository ordenRepository;
+    @Autowired private EstadoOrdenRepository estadoOrdenRepository;
+    @Autowired private EmpleadoRepository empleadoRepository;
 
     @Override
     public List<ClienteDTO> listarClientes() {
@@ -54,5 +59,72 @@ public class ClienteServiceImpl implements ClienteService {
     private ClienteDTO convertirADTO(Cliente c) {
         return ClienteDTO.builder().idCliente(c.getIdCliente()).nombre(c.getNombre())
                 .telefono(c.getTelefono()).idRol(c.getRol().getId()).build();
+    }
+    @Override
+    public OrdenDTO solicitarServicio(SolicitudServicioDTO dto) {
+        Cliente cliente = clienteRepository.findById(dto.getIdCliente())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        // Se asume que el ID 1 corresponde a "Pendiente" o "En Recepción" en la BD
+        EstadoOrden estadoInicial = estadoOrdenRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Estado inicial no configurado en la BD"));
+
+        // Se puede asignar a un empleado "Receptor" por defecto (ej. ID 1) temporalmente
+        Empleado empleadoReceptor = empleadoRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Empleado de recepción no configurado"));
+
+        Orden nuevaOrden = Orden.builder()
+                .descripcion(dto.getDescripcionProblema())
+                .cliente(cliente)
+                .empleado(empleadoReceptor)
+                .estadoOrden(estadoInicial)
+                .build();
+
+        Orden ordenGuardada = ordenRepository.save(nuevaOrden);
+
+        return OrdenDTO.builder()
+                .idOrden(ordenGuardada.getIdOrden())
+                .descripcion(ordenGuardada.getDescripcion())
+                .idCliente(cliente.getIdCliente())
+                .idEmpleado(empleadoReceptor.getIdEmpleado())
+                .idEstadoOrden(estadoInicial.getIdEstadoOrden())
+                .build();
+    }
+
+    @Override
+    public String consultarEstadoReparacion(Long idOrden) {
+        Orden orden = ordenRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        return "El estado actual de su motocicleta es: " + orden.getEstadoOrden().getDescripcion();
+    }
+
+    @Override
+    public String aprobarCotizacion(Long idOrden, boolean aprueba) {
+        Orden orden = ordenRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        // Asumiendo que ID 2 es "Aprobada" y ID 3 es "Rechazada" en tu tabla estado_orden
+        Long idNuevoEstado = aprueba ? 2L : 3L;
+        EstadoOrden nuevoEstado = estadoOrdenRepository.findById(idNuevoEstado)
+                .orElseThrow(() -> new RuntimeException("Estado destino no encontrado en la BD"));
+
+        orden.setEstadoOrden(nuevoEstado);
+        ordenRepository.save(orden);
+
+        return aprueba ? "Cotización aprobada. Iniciando trabajos." : "Cotización rechazada. Puede retirar su motocicleta.";
+    }
+
+    @Override
+    public String verDetalleFacturacion(Long idOrden) {
+        Orden orden = ordenRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        // Como no hay tabla de facturación en el diagrama de 13 tablas, se simula el cálculo o se expone el resumen
+        return "Resumen de Facturación para la Orden #" + orden.getIdOrden() + "\n" +
+                "Cliente: " + orden.getCliente().getNombre() + "\n" +
+                "Descripción: " + orden.getDescripcion() + "\n" +
+                "Estado: " + orden.getEstadoOrden().getDescripcion() + "\n" +
+                "Total Estimado: Pendiente de módulo de costos.";
     }
 }
