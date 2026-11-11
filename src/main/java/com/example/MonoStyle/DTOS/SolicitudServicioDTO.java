@@ -11,4 +11,6 @@ public class SolicitudServicioDTO {
 
     @NotBlank(message = "La descripción del problema es obligatoria")
     private String descripcionProblema;
+
+    private Long idEmpleado;
 }

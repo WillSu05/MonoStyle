@@ -1,4 +1,5 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,12 +9,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EmpleadoDTO {
+    @JsonIgnore
     private Long idEmpleado;
 
     @NotBlank(message = "El nombre del empleado es obligatorio")
     private String nombre;
 
     private String especialidad;
+
+    private String credenciales;
 
     private Long idDisponibilidadEmpleado; // Puede ser null si aún no se le asigna un estado
 

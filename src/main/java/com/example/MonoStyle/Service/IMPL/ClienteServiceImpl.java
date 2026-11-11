@@ -7,6 +7,7 @@ import com.example.MonoStyle.Repository.*;
 import com.example.MonoStyle.Service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,8 @@ public class ClienteServiceImpl implements ClienteService {
     private OrdenRepository ordenRepository;
     @Autowired private EstadoOrdenRepository estadoOrdenRepository;
     @Autowired private EmpleadoRepository empleadoRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<ClienteDTO> listarClientes() {
@@ -36,7 +39,15 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteDTO crearCliente(ClienteDTO dto) {
         Rol rol = rolRepository.findById(dto.getIdRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-        Cliente cliente = Cliente.builder().nombre(dto.getNombre()).telefono(dto.getTelefono()).rol(rol).build();
+
+        Cliente cliente = Cliente.builder()
+                .nombre(dto.getNombre())
+                .telefono(dto.getTelefono())
+                // ¡Línea crucial añadida!: Encriptamos la contraseña para cumplir con la base de datos
+                .credenciales(passwordEncoder.encode(dto.getCredenciales()))
+                .rol(rol)
+                .build();
+
         return convertirADTO(clienteRepository.save(cliente));
     }
 
@@ -58,7 +69,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     private ClienteDTO convertirADTO(Cliente c) {
         return ClienteDTO.builder().idCliente(c.getIdCliente()).nombre(c.getNombre())
-                .telefono(c.getTelefono()).idRol(c.getRol().getId()).build();
+                .telefono(c.getTelefono()).credenciales(c.getCredenciales()).idRol(c.getRol().getId()).build();
     }
     @Override
     public OrdenDTO solicitarServicio(SolicitudServicioDTO dto) {
@@ -70,7 +81,7 @@ public class ClienteServiceImpl implements ClienteService {
                 .orElseThrow(() -> new RuntimeException("Estado inicial no configurado en la BD"));
 
         // Se puede asignar a un empleado "Receptor" por defecto (ej. ID 1) temporalmente
-        Empleado empleadoReceptor = empleadoRepository.findById(1L)
+        Empleado empleadoReceptor = empleadoRepository.findById(dto.getIdEmpleado())
                 .orElseThrow(() -> new RuntimeException("Empleado de recepción no configurado"));
 
         Orden nuevaOrden = Orden.builder()

@@ -32,7 +32,7 @@ public class ReferenciaServiceImpl implements ReferenciaService {
     public ReferenciaDTO crearReferencia(ReferenciaDTO dto) {
         Categoria cat = categoriaRepository.findById(dto.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        Referencia ref = Referencia.builder().descripcion(dto.getDescripcion()).categoria(cat).build();
+        Referencia ref = Referencia.builder().descripcion(dto.getDescripcion()).stock(dto.getStock()).categoria(cat).build();
         return convertirADTO(referenciaRepository.save(ref));
     }
 
@@ -53,6 +53,6 @@ public class ReferenciaServiceImpl implements ReferenciaService {
     }
 
     private ReferenciaDTO convertirADTO(Referencia r) {
-        return ReferenciaDTO.builder().id(r.getId()).descripcion(r.getDescripcion()).idCategoria(r.getCategoria().getIdCategoria()).build();
+        return ReferenciaDTO.builder().id(r.getId()).descripcion(r.getDescripcion()).idCategoria(r.getCategoria().getIdCategoria()).stock(r.getStock()).build();
     }
 }

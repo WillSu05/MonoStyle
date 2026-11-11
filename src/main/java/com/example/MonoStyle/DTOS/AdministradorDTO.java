@@ -1,4 +1,5 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,13 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AdministradorDTO {
+    @JsonIgnore
     private Long idAdministrador;
 
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-
-    @NotNull(message = "El nivel de acceso es obligatorio")
-    private Integer nivelAcceso;
 
     @NotBlank(message = "Las credenciales (contraseña) son obligatorias")
     private String credenciales;

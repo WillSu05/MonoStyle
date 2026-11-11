@@ -1,4 +1,5 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class OrdenDTO {
+    @JsonIgnore
     private Long idOrden;
 
     @NotBlank(message = "La descripción de la orden es obligatoria")

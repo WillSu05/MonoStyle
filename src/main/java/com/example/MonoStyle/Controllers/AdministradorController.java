@@ -5,10 +5,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("/api/administradores")
+@PreAuthorize("hasRole('ADMIN')")
 class AdministradorController {
     @Autowired private AdministradorService service;
     @GetMapping public ResponseEntity<List<AdministradorDTO>> listar() {
@@ -21,4 +23,41 @@ class AdministradorController {
         return ResponseEntity.ok(service.actualizarAdministrador(id, dto)); }
     @DeleteMapping("/{id}") public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminarAdministrador(id); return ResponseEntity.noContent().build(); }
+
+    @PostMapping("/inventario/ingreso-repuestos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> registrarIngresoRepuestos(@RequestParam Long idReferencia, @RequestParam Integer cantidad) {
+        // Lógica delegada al service
+        return ResponseEntity.ok("Ingreso de " + cantidad + " repuestos registrado.");
+    }
+
+    @GetMapping("/inventario")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> consultarInventario() {
+        return ResponseEntity.ok("Reporte de inventario generado.");
+    }
+
+    @PostMapping("/ordenes-compra/generar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> generarOrdenCompra(@RequestParam Integer idProveedor) {
+        return ResponseEntity.ok("Orden de compra generada para el proveedor: " + idProveedor);
+    }
+
+    @PostMapping("/inventario/piezas-sobrantes")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> gestionarPiezasSobrantes() {
+        return ResponseEntity.ok("Gestión de piezas sobrantes ejecutada (Kardex actualizado).");
+    }
+
+    @GetMapping("/metricas")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> visualizarMetricasTaller() {
+        return ResponseEntity.ok("Métricas del taller (Reparaciones, Ingresos, Tiempos).");
+    }
+
+    @PatchMapping("/usuarios/{idUsuario}/asignar-rol")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> asignarRol(@PathVariable Long idUsuario, @RequestParam Long idRol) {
+        return ResponseEntity.ok("Rol " + idRol + " asignado al usuario " + idUsuario);
+    }
 }

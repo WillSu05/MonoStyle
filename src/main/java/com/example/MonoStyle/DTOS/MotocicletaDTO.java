@@ -1,10 +1,12 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class MotocicletaDTO {
+    @JsonIgnore
     private Long idMotocicleta;
 
     @NotNull(message = "El modelo es obligatorio")
