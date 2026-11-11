@@ -1,4 +1,5 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -6,6 +7,7 @@ import java.math.BigDecimal;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class DetalleOrdenDTO {
+    @JsonIgnore
     private Long idDetalleOrden;
 
     @NotNull(message = "El ID de la orden es obligatorio")

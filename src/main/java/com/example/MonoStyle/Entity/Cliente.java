@@ -1,5 +1,6 @@
 package com.example.MonoStyle.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,13 +16,16 @@ public class Cliente {
     private Long idCliente;
 
     @Column(nullable = false, length = 100)
-
     private String nombre;
 
     @Column(length = 20)
     private String telefono;
 
+    @Column(nullable = false)
+    private String credenciales;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol", nullable = false)
+    @JsonIgnore
     private Rol rol;
 }

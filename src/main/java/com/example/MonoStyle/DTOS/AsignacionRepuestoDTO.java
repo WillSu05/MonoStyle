@@ -1,10 +1,12 @@
 package com.example.MonoStyle.DTOS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class AsignacionRepuestoDTO {
     @NotNull(message = "El ID de la orden es obligatorio")
+    @JsonIgnore
     private Long idOrden;
 
     @NotNull(message = "El ID de la referencia (repuesto) es obligatorio")

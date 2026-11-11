@@ -15,12 +15,12 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    // Se lee desde el application.properties
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    // Se asigna la clave directamente en el código para evitar problemas con application.properties.
+    // Esta clave tiene más de 32 caracteres (256 bits), cumpliendo con RFC 7518.
+    private final String jwtSecret = "MonoStyle2026!TallerMecanicoSeguridadSuperAvanzadaJWT-Secreto12345";
 
-    @Value("${jwt.expiration}")
-    private long jwtExpirationDate;
+    // Tiempo de expiración definido directamente (ej. 24 horas en milisegundos)
+    private final long jwtExpirationDate = 86400000;
 
     // Genera la llave encriptada a partir de tu secreto
     private Key key() {

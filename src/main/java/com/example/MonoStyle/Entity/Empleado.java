@@ -19,6 +19,9 @@ public class Empleado {
     @Column(nullable = false, length = 100)
     private String nombre;
 
+    @Column(nullable = true)
+    private String credenciales;
+
     @Column(length = 50)
     private String especialidad;
 
