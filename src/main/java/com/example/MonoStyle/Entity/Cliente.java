@@ -21,6 +21,9 @@ public class Cliente {
     @Column(length = 20)
     private String telefono;
 
+    @Column(unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String credenciales;
 

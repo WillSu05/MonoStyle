@@ -25,20 +25,25 @@ public class AuthController {
 
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtTokenProvider jwtTokenProvider;
+    @Autowired private ClienteRepository clienteRepository;
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
 
-        // 1. Spring Security usa el CustomUserDetailsService para buscar en las 3 tablas y validar la clave
+        String usuario = loginDTO.getNombre();
+        if (usuario != null && usuario.contains("@")) {
+            usuario = clienteRepository.findByEmail(usuario)
+                    .map(Cliente::getNombre)
+                    .orElse(usuario);
+        }
+
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDTO.getNombre(), loginDTO.getCredenciales())
+                new UsernamePasswordAuthenticationToken(usuario, loginDTO.getCredenciales())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 2. Extraer dinámicamente el rol que Spring le asignó (ADMIN, EMPLEADO o CLIENTE)
         String rolDetectado = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
 
-        // 3. Generar el token inyectando ese rol exacto
         String token = jwtTokenProvider.generarToken(authentication.getName(), rolDetectado);
 
         return ResponseEntity.ok(new JwtAuthResponseDTO(token, "Bearer"));

@@ -24,9 +24,9 @@ class ClienteController {
         return ResponseEntity.ok(service.obtenerClientePorId(id)); }
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> crear(@Valid @RequestBody ClienteDTO dto) {
-        return new ResponseEntity<>(service.crearCliente(dto), HttpStatus.CREATED); }
-
+    public ResponseEntity<ClienteDTO> crear(@Valid @RequestBody RegistroClienteDTO dto) {
+        return new ResponseEntity<>(service.registrarCliente(dto), HttpStatus.CREATED);
+    }
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE')")
     public ResponseEntity<ClienteDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ClienteDTO dto) {

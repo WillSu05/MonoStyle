@@ -1,6 +1,7 @@
 package com.example.MonoStyle.Service.IMPL;
 import com.example.MonoStyle.DTOS.ClienteDTO;
 import com.example.MonoStyle.DTOS.OrdenDTO;
+import com.example.MonoStyle.DTOS.RegistroClienteDTO;
 import com.example.MonoStyle.DTOS.SolicitudServicioDTO;
 import com.example.MonoStyle.Entity.*;
 import com.example.MonoStyle.Repository.*;
@@ -137,5 +138,27 @@ public class ClienteServiceImpl implements ClienteService {
                 "Descripción: " + orden.getDescripcion() + "\n" +
                 "Estado: " + orden.getEstadoOrden().getDescripcion() + "\n" +
                 "Total Estimado: Pendiente de módulo de costos.";
+    }
+
+    @Override
+    public ClienteDTO registrarCliente(RegistroClienteDTO dto) {
+        if (clienteRepository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Ya existe una cuenta con ese correo");
+        }
+
+        Rol rol = rolRepository.findAll().stream()
+                .filter(r -> r.getDescripcion().equalsIgnoreCase("CLIENTE"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Rol CLIENTE no encontrado"));
+
+        Cliente cliente = Cliente.builder()
+                .nombre(dto.getNombre())
+                .email(dto.getEmail())
+                .telefono(dto.getTelefono())
+                .credenciales(passwordEncoder.encode(dto.getCredenciales()))
+                .rol(rol)
+                .build();
+
+        return convertirADTO(clienteRepository.save(cliente));
     }
 }
