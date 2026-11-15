@@ -1,6 +1,7 @@
 package com.example.MonoStyle.Service;
 import com.example.MonoStyle.DTOS.ClienteDTO;
 import com.example.MonoStyle.DTOS.OrdenDTO;
+import com.example.MonoStyle.DTOS.RegistroClienteDTO;
 import com.example.MonoStyle.DTOS.SolicitudServicioDTO;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ClienteService {
     String consultarEstadoReparacion(Long idOrden);
     String aprobarCotizacion(Long idOrden, boolean aprueba);
     String verDetalleFacturacion(Long idOrden);
+    ClienteDTO registrarCliente(RegistroClienteDTO dto);
 }
