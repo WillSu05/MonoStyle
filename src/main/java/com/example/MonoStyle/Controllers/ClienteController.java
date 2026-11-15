@@ -59,5 +59,12 @@ class ClienteController {
     public ResponseEntity<String> verDetalleFacturacion(@PathVariable Long idOrden) {
         return ResponseEntity.ok(service.verDetalleFacturacion(idOrden));
     }
+    @PutMapping("/cambiar-clave")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<String> cambiarClave(@Valid @RequestBody CambiarClaveDTO dto,
+                                               org.springframework.security.core.Authentication auth) {
+        service.cambiarClave(auth.getName(), dto);
+        return ResponseEntity.ok("Contraseña actualizada");
+    }
 
 }
