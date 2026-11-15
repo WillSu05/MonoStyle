@@ -23,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:5173", "http://192.168.1.39:5173"})
 public class AuthController {
 
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
-    @Autowired private ClienteRepository clienteRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
@@ -43,9 +46,19 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String rolDetectado = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-
         String token = jwtTokenProvider.generarToken(authentication.getName(), rolDetectado);
 
-        return ResponseEntity.ok(new JwtAuthResponseDTO(token, "Bearer"));
+        JwtAuthResponseDTO respuesta = new JwtAuthResponseDTO(token, "Bearer");
+
+        if ("CLIENTE".equals(rolDetectado)) {
+            clienteRepository.findByNombre(authentication.getName()).ifPresent(c -> {
+                respuesta.setIdCliente(c.getIdCliente());
+                respuesta.setNombre(c.getNombre());
+                respuesta.setEmail(c.getEmail());
+                respuesta.setTelefono(c.getTelefono());
+            });
+        }
+
+        return ResponseEntity.ok(respuesta);
     }
 }

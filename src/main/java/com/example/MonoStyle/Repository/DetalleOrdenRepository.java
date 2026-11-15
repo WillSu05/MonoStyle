@@ -6,6 +6,5 @@ import java.util.List;
 
 @Repository
 public interface DetalleOrdenRepository extends JpaRepository<DetalleOrden, Long> {
-    // Permite obtener todos los repuestos asignados a una orden específica
     List<DetalleOrden> findByOrdenIdOrden(Long idOrden);
 }

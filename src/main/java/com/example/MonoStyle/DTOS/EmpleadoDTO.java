@@ -19,8 +19,7 @@ public class EmpleadoDTO {
 
     private String credenciales;
 
-    private Long idDisponibilidadEmpleado; // Puede ser null si aún no se le asigna un estado
-
+    private Long idDisponibilidadEmpleado;
     @NotNull(message = "El ID del rol es obligatorio")
     private Long idRol;
 }
