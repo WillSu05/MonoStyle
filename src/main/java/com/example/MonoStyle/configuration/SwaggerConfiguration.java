@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(title = "MonoStyle API", version = "1.0", description = "Documentación de la API de MonoStyle"),
-        security = @SecurityRequirement(name = "bearerAuth") // Aplica seguridad a todos los endpoints globalmente
+        security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
         name = "bearerAuth",
