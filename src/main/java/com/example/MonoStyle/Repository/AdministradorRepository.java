@@ -6,5 +6,5 @@ import java.util.Optional;
 
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
-    Optional<Administrador> findByNombre(String nombre); // Método clave para el login
+    Optional<Administrador> findByNombre(String nombre);
 }

@@ -20,5 +20,5 @@ public class DetalleOrdenDTO {
     @Min(value = 1, message = "La cantidad debe ser al menos 1")
     private Double cantidad;
 
-    private BigDecimal precioUnitario; // Se calculará en el backend con el precio vigente
+    private BigDecimal precioUnitario;
 }
