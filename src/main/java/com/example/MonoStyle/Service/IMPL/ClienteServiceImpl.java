@@ -1,8 +1,5 @@
 package com.example.MonoStyle.Service.IMPL;
-import com.example.MonoStyle.DTOS.ClienteDTO;
-import com.example.MonoStyle.DTOS.OrdenDTO;
-import com.example.MonoStyle.DTOS.RegistroClienteDTO;
-import com.example.MonoStyle.DTOS.SolicitudServicioDTO;
+import com.example.MonoStyle.DTOS.*;
 import com.example.MonoStyle.Entity.*;
 import com.example.MonoStyle.Repository.*;
 import com.example.MonoStyle.Service.ClienteService;
@@ -160,5 +157,18 @@ public class ClienteServiceImpl implements ClienteService {
                 .build();
 
         return convertirADTO(clienteRepository.save(cliente));
+    }
+
+    @Override
+    public void cambiarClave(String nombre, CambiarClaveDTO dto) {
+        Cliente cliente = clienteRepository.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        if (!passwordEncoder.matches(dto.getClaveActual(), cliente.getCredenciales())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        cliente.setCredenciales(passwordEncoder.encode(dto.getClaveNueva()));
+        clienteRepository.save(cliente);
     }
 }
