@@ -16,8 +16,8 @@ public class Motocicleta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMotocicleta;
 
-    @Column(nullable = false)
-    private Integer modelo;
+    @Column(nullable = false, length = 50)
+    private String modelo;
 
     @Column(nullable = false, name = "anio")
     private Integer año;

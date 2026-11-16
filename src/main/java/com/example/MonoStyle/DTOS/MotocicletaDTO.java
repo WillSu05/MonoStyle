@@ -4,13 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MotocicletaDTO {
     @JsonIgnore
     private Long idMotocicleta;
 
-    @NotNull(message = "El modelo es obligatorio")
-    private Integer modelo;
+    @NotBlank(message = "El modelo es obligatorio")
+    private String modelo;
 
     @NotNull(message = "El año es obligatorio")
     private Integer año;
