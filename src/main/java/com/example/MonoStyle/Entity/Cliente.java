@@ -27,6 +27,12 @@ public class Cliente {
     @Column(nullable = false)
     private String credenciales;
 
+    @Column(name = "reset_codigo", length = 100)
+    private String resetCodigo;
+
+    @Column(name = "reset_expira")
+    private java.time.LocalDateTime resetExpira;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol", nullable = false)
     @JsonIgnore
