@@ -70,9 +70,9 @@ public class OrdenServiceImpl implements OrdenService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MisServiciosDTO> listarServiciosPorEmailCliente(String email) {
-        Cliente cliente = clienteRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con correo: " + email));
+    public List<MisServiciosDTO> listarServiciosPorEmailCliente(String nombreUsuario) {
+        Cliente cliente = clienteRepository.findByNombre(nombreUsuario)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado: " + nombreUsuario));
 
         return ordenRepository.findByCliente_IdClienteOrderByIdOrdenDesc(cliente.getIdCliente())
                 .stream()
@@ -82,8 +82,8 @@ public class OrdenServiceImpl implements OrdenService {
 
     @Override
     @Transactional(readOnly = true)
-    public MisServiciosDTO obtenerDetalleServicioCliente(Long idOrden, String email) {
-        Cliente cliente = clienteRepository.findByEmail(email)
+    public MisServiciosDTO obtenerDetalleServicioCliente(Long idOrden, String nombreUsuario) {
+        Cliente cliente = clienteRepository.findByNombre(nombreUsuario)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         Orden orden = ordenRepository.findById(idOrden)
