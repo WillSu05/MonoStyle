@@ -1,7 +1,7 @@
 package com.example.MonoStyle.Controllers;
 
 import com.example.MonoStyle.Repository.ClienteRepository;
-import com.example.MonoStyle.Service.EmailService;
+import com.example.MonoStyle.Service.IMPL.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class RecuperarClaveController {
 
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private EmailService emailService;
+    @Autowired private EmailServiceImpl emailService;
 
     @PostMapping("/olvide-clave")
     public ResponseEntity<Void> olvideClave(@RequestBody Map<String, String> body) {

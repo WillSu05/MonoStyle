@@ -1,4 +1,4 @@
-package com.example.MonoStyle.Service;
+package com.example.MonoStyle.Service.IMPL;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class EmailService {
+public class EmailServiceImpl {
 
     @Value("${brevo.api-key}") private String apiKey;
     @Value("${brevo.sender-email}") private String sender;
