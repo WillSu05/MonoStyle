@@ -8,6 +8,7 @@ import com.example.MonoStyle.Repository.EstadoOrdenRepository;
 import com.example.MonoStyle.Repository.OrdenRepository;
 import com.example.MonoStyle.Service.OrdenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrdenServiceImpl implements OrdenService {
 
-    private OrdenRepository ordenRepository;
-    private EmpleadoRepository empleadoRepository;
-    private ClienteRepository clienteRepository;
-    private EstadoOrdenRepository estadoOrdenRepository;
+    @Autowired private OrdenRepository ordenRepository;
+    @Autowired private EmpleadoRepository empleadoRepository;
+    @Autowired private ClienteRepository clienteRepository;
+    @Autowired private EstadoOrdenRepository estadoOrdenRepository;
 
     @Override
     public List<OrdenDTO> listarOrdenes() {
