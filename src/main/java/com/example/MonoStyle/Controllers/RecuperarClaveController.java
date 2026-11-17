@@ -34,8 +34,10 @@ public class RecuperarClaveController {
                 emailService.enviar(email, "Código de recuperación MonoStyle",
                         "<p>Tu código es: <b style='font-size:22px'>" + codigo + "</b></p>"
                                 + "<p>Vence en 15 minutos. Si no lo pediste, ignora este correo.</p>");
+            } catch (org.springframework.web.client.HttpStatusCodeException e) {
+                System.out.println("RECUPERAR: Brevo respondió " + e.getStatusCode() + ": " + e.getResponseBodyAsString());
             } catch (Exception e) {
-                System.out.println("Error enviando correo: " + e.getMessage());
+                System.out.println("RECUPERAR: error enviando correo: " + e.getMessage());
             }
         });
         return ResponseEntity.ok().build();
