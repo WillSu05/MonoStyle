@@ -19,12 +19,28 @@ class OrdenController {
     @DeleteMapping("/{id}") public ResponseEntity<Void> eliminar(@PathVariable Long id) { service.eliminarOrden(id); return ResponseEntity.noContent().build(); }
 
     @GetMapping("/mis-servicios")
-    public ResponseEntity<List<MisServiciosDTO>> misServicios(Authentication auth) {
-        return ResponseEntity.ok(service.listarServiciosPorEmailCliente(auth.getName()));
+    public ResponseEntity<?> misServicios(Authentication auth) {
+        try {
+            if (auth == null || auth.getName() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token sin usuario autenticado");
+            }
+            return ResponseEntity.ok(service.listarServiciosPorEmailCliente(auth.getName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/mis-servicios/{id}")
-    public ResponseEntity<MisServiciosDTO> detalleMiServicio(@PathVariable Long id, Authentication auth) {
-        return ResponseEntity.ok(service.obtenerDetalleServicioCliente(id, auth.getName()));
+    public ResponseEntity<?> detalleMiServicio(@PathVariable Long id, Authentication auth) {
+        try {
+            if (auth == null || auth.getName() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token sin usuario autenticado");
+            }
+            return ResponseEntity.ok(service.obtenerDetalleServicioCliente(id, auth.getName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
 }
