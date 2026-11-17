@@ -14,8 +14,13 @@ public class EmailServiceImpl {
     @Value("${brevo.sender-email}") private String sender;
 
     public void enviar(String para, String asunto, String html) {
+        String clave = apiKey == null ? "" : apiKey.trim();
+        System.out.println("BREVO longitud=" + clave.length()
+                + " inicio=" + (clave.length() > 6 ? clave.substring(0, 6) : clave)
+                + " remitente=" + sender);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.set("api-key", apiKey);
+        headers.set("api-key", clave);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> body = Map.of(
