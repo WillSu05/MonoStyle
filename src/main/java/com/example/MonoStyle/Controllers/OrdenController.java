@@ -21,26 +21,30 @@ class OrdenController {
     @GetMapping("/mis-servicios")
     public ResponseEntity<?> misServicios(Authentication auth) {
         try {
-            if (auth == null || auth.getName() == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token sin usuario autenticado");
+            if (auth == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("ERROR_DEBUG: auth es null");
             }
             return ResponseEntity.ok(service.listarServiciosPorEmailCliente(auth.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("ERROR_DEBUG: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
     }
 
     @GetMapping("/mis-servicios/{id}")
     public ResponseEntity<?> detalleMiServicio(@PathVariable Long id, Authentication auth) {
         try {
-            if (auth == null || auth.getName() == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token sin usuario autenticado");
+            if (auth == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("ERROR_DEBUG: auth es null");
             }
             return ResponseEntity.ok(service.obtenerDetalleServicioCliente(id, auth.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("ERROR_DEBUG: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
     }
 }
