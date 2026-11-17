@@ -1,9 +1,7 @@
 package com.example.MonoStyle.Service.IMPL;
+import com.example.MonoStyle.DTOS.MisServiciosDTO;
 import com.example.MonoStyle.DTOS.OrdenDTO;
-import com.example.MonoStyle.Entity.Cliente;
-import com.example.MonoStyle.Entity.Empleado;
-import com.example.MonoStyle.Entity.EstadoOrden;
-import com.example.MonoStyle.Entity.Orden;
+import com.example.MonoStyle.Entity.*;
 import com.example.MonoStyle.Repository.ClienteRepository;
 import com.example.MonoStyle.Repository.EmpleadoRepository;
 import com.example.MonoStyle.Repository.EstadoOrdenRepository;
@@ -11,6 +9,9 @@ import com.example.MonoStyle.Repository.OrdenRepository;
 import com.example.MonoStyle.Service.OrdenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,81 @@ public class OrdenServiceImpl implements OrdenService {
     @Override
     public void eliminarOrden(Long id) {
         ordenRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MisServiciosDTO> listarServiciosPorEmailCliente(String email) {
+        Cliente cliente = clienteRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con correo: " + email));
+
+        return ordenRepository.findByCliente_IdClienteOrderByIdOrdenDesc(cliente.getIdCliente())
+                .stream()
+                .map(this::convertirAMisServiciosDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MisServiciosDTO obtenerDetalleServicioCliente(Long idOrden, String email) {
+        Cliente cliente = clienteRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        Orden orden = ordenRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        if (!orden.getCliente().getIdCliente().equals(cliente.getIdCliente())) {
+            throw new RuntimeException("No tienes permiso para ver esta orden");
+        }
+
+        return convertirAMisServiciosDTO(orden);
+    }
+
+    private MisServiciosDTO convertirAMisServiciosDTO(Orden o) {
+        BigDecimal total = BigDecimal.ZERO;
+        if (o.getDetalles() != null) {
+            for (DetalleOrden det : o.getDetalles()) {
+                BigDecimal cant = BigDecimal.valueOf(det.getCantidad() != null ? det.getCantidad() : 0.0);
+                BigDecimal precio = det.getPrecio() != null ? det.getPrecio() : BigDecimal.ZERO;
+                total = total.add(precio.multiply(cant));
+            }
+        }
+
+        String rawDesc = o.getDescripcion() != null ? o.getDescripcion() : "Servicio de taller";
+        String titulo = rawDesc;
+        String vehiculo = "Motocicleta registrada";
+        String fecha = "Reciente";
+
+        if (rawDesc.contains(" - Vehículo:")) {
+            String[] partes = rawDesc.split(" - Vehículo:");
+            titulo = partes[0].trim();
+            vehiculo = partes[1].trim();
+        } else if (rawDesc.contains("|")) {
+            String[] partes = rawDesc.split("\\|");
+            titulo = partes[0].trim();
+            for (String p : partes) {
+                if (p.toLowerCase().contains("vehículo") || p.toLowerCase().contains("vehiculo")) {
+                    vehiculo = p.replaceAll("(?i)veh[ií]culo:", "").trim();
+                }
+                if (p.toLowerCase().contains("fecha")) {
+                    fecha = p.replaceAll("(?i)fecha:", "").trim();
+                }
+            }
+        }
+
+        String estadoTexto = (o.getEstadoOrden() != null && o.getEstadoOrden().getDescripcion() != null)
+                ? o.getEstadoOrden().getDescripcion()
+                : "En curso";
+
+        return MisServiciosDTO.builder()
+                .idOrden(o.getIdOrden())
+                .tituloServicio(titulo)
+                .fecha(fecha)
+                .vehiculo(vehiculo)
+                .descripcion(rawDesc)
+                .costo(total)
+                .estado(estadoTexto)
+                .build();
     }
 
     private OrdenDTO convertirADTO(Orden o) {
